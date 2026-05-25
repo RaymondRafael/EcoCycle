@@ -14,6 +14,7 @@ class Pickup extends Model
         'user_id',
         'driver_id',
         'pickup_date',
+        'pickup_address',
         'status',
         'total_points_earned',
     ];

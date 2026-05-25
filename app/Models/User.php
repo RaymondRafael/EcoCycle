@@ -23,6 +23,13 @@ class User extends Authenticatable
         'email',
         'password',
         'role', // Menambahkan role ke dalam fillable
+        'point_balance', // Pastikan point_balance juga ada di sini
+        'referral_code', // Tambahan baru
+        'referred_by',   // Tambahan baru
+        'phone',
+        'address',
+        'city',
+        'postal_code',
     ];
 
     /**
@@ -46,5 +53,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany(UserAddress::class);
     }
 }

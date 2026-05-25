@@ -15,12 +15,15 @@
                         <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-base font-bold transition {{ request()->routeIs('admin.dashboard') ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-green-600 hover:border-green-300' }}">
                             {{ __('Admin Panel') }}
                         </a>
-                        @else
+                    @else
                         <a href="{{ route('dashboard') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-base font-bold transition {{ request()->routeIs('dashboard') ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-green-600 hover:border-green-300' }}">
                             {{ __('Dashboard') }}
                         </a>
                         <a href="{{ route('history.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-base font-bold transition {{ request()->routeIs('history.index') ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-green-600 hover:border-green-300' }}">
                             {{ __('Riwayat') }}
+                        </a>
+                        <a href="{{ route('leaderboard') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-base font-bold transition {{ request()->routeIs('leaderboard') ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-amber-600 hover:border-amber-300' }}">
+                            <i class="fa-solid fa-trophy mr-1"></i> {{ __('Leaderboard') }}
                         </a>
                     @endif
 
@@ -88,6 +91,9 @@
                 </a>
                 <a href="{{ route('history.index') }}" class="block w-full ps-3 pe-4 py-3 border-l-4 font-bold text-base transition {{ request()->routeIs('history.index') ? 'border-green-500 text-green-600 bg-green-50' : 'border-transparent text-gray-600 hover:text-green-600 hover:bg-green-50 hover:border-green-300' }}">
                     <i class="fa-solid fa-clock-rotate-left mr-2"></i> {{ __('Riwayat') }}
+                </a>
+                <a href="{{ route('leaderboard') }}" class="block w-full ps-3 pe-4 py-3 border-l-4 font-bold text-base transition {{ request()->routeIs('leaderboard') ? 'border-amber-500 text-amber-600 bg-amber-50' : 'border-transparent text-gray-600 hover:text-amber-600 hover:bg-amber-50 hover:border-amber-300' }}">
+                    <i class="fa-solid fa-trophy mr-2 text-amber-500"></i> {{ __('Leaderboard') }}
                 </a>
             @endif
 

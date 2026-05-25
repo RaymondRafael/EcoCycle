@@ -14,7 +14,7 @@
             <div class="bg-gray-900 rounded-3xl p-8 shadow-xl mb-8 flex flex-col md:flex-row justify-between items-center relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-64 h-64 bg-green-500 rounded-full blur-3xl -mr-20 -mt-20 opacity-20"></div>
                 <div class="relative z-10 text-white">
-                    <h3 class="text-2xl font-bold mb-1">Selamat Datang, Administrator EcoCycle! 🌍</h3>
+                    <h3 class="text-2xl font-bold mb-1">Selamat Datang, Administrator EcoCycle!</h3>
                     <p class="text-gray-400">Berikut adalah ringkasan sistem pengelolaan sampah hari ini.</p>
                 </div>
                 <div class="relative z-10 mt-4 md:mt-0">
@@ -56,41 +56,64 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-lg font-bold text-gray-900">Permintaan Terbaru</h3>
-                        <a href="#" class="text-sm font-bold text-blue-600 hover:text-blue-700">Lihat Semua</a>
+                        <a href="{{ route('admin.pickups.index') }}" class="text-sm font-bold text-blue-600 hover:text-blue-700">Lihat Semua</a>
                     </div>
-                    <div class="text-center py-8">
-                        <i class="fa-solid fa-inbox text-4xl text-gray-300 mb-3"></i>
-                        <p class="text-gray-500 font-medium">Belum ada data penjemputan baru yang perlu diproses.</p>
+                    
+                    <div class="space-y-4">
+                        @forelse($recentPendingPickups as $pickup)
+                            <div class="flex items-center justify-between p-4 border border-yellow-100 bg-yellow-50/50 rounded-xl">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center shrink-0">
+                                        <i class="fa-solid fa-hourglass-half"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-900 text-sm">{{ $pickup->user->name }}</h4>
+                                        <p class="text-xs text-gray-500 mt-0.5">
+                                            <i class="fa-regular fa-calendar mr-1"></i> {{ \Carbon\Carbon::parse($pickup->pickup_date)->format('d M, H:i') }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="inline-block bg-white text-yellow-700 border border-yellow-200 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide shadow-sm">
+                                        Perlu Proses
+                                    </span>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="text-center py-8">
+                                <i class="fa-solid fa-inbox text-4xl text-gray-300 mb-3 block"></i>
+                                <p class="text-gray-500 font-medium">Belum ada data penjemputan baru yang perlu diproses.</p>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
 
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                     <h3 class="text-lg font-bold text-gray-900 mb-6">Menu Administrator</h3>
                     <div class="grid grid-cols-2 gap-4">
-                        <button class="p-4 border border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition text-left group">
+                        <a href="{{ route('admin.pickups.index') }}" class="block p-4 border border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition text-left group">
                             <i class="fa-solid fa-truck text-green-600 text-xl mb-2 group-hover:scale-110 transition"></i>
                             <h4 class="font-bold text-gray-900">Kelola Penjemputan</h4>
                             <p class="text-xs text-gray-500 mt-1">Assign ke Mitra/Driver</p>
-                        </button>
-                        <button class="p-4 border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition text-left group">
+                        </a>
+                        <a href="{{ route('admin.users.index') }}" class="block p-4 border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition text-left group">
                             <i class="fa-solid fa-users-gear text-blue-600 text-xl mb-2 group-hover:scale-110 transition"></i>
                             <h4 class="font-bold text-gray-900">Kelola Pengguna</h4>
-                            <p class="text-xs text-gray-500 mt-1">Lihat data & blokir akun</p>
-                        </button>
-                        <button class="p-4 border border-gray-200 rounded-xl hover:border-yellow-500 hover:bg-yellow-50 transition text-left group">
-                            <i class="fa-solid fa-money-bill-transfer text-yellow-600 text-xl mb-2 group-hover:scale-110 transition"></i>
+                            <p class="text-xs text-gray-500 mt-1">Lihat data & hapus akun</p>
+                        </a>
+                        <a href="{{ route('admin.withdrawals.index') }}" class="block p-4 border border-gray-200 rounded-xl hover:border-yellow-500 hover:bg-yellow-50 transition text-left group">
+                            <i class="fa-solid fa-hand-holding-dollar text-yellow-600 text-xl mb-2 group-hover:scale-110 transition"></i>
                             <h4 class="font-bold text-gray-900">Pencairan Saldo</h4>
                             <p class="text-xs text-gray-500 mt-1">Proses penarikan poin user</p>
-                        </button>
-                        <button class="p-4 border border-gray-200 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition text-left group">
+                        </a>
+                        <a href="{{ route('admin.catalogs.index') }}" class="block p-4 border border-gray-200 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition text-left group">
                             <i class="fa-solid fa-tags text-purple-600 text-xl mb-2 group-hover:scale-110 transition"></i>
                             <h4 class="font-bold text-gray-900">Katalog Harga</h4>
                             <p class="text-xs text-gray-500 mt-1">Update nilai tukar sampah</p>
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>

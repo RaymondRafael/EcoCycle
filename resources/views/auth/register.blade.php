@@ -33,7 +33,7 @@
 
                 <h1 class="text-4xl font-black text-gray-900 mb-4">Bergabung Bersama Kami</h1>
                 <p class="text-gray-600 text-lg max-w-md mx-auto">
-                    Jadilah bagian dari 500+ pahlawan lingkungan yang telah berkontribusi mengurangi emisi karbon di Indonesia.
+                    Jadilah bagian dari pahlawan lingkungan yang telah berkontribusi mengurangi emisi karbon di Indonesia.
                 </p>
             </div>
         </div>
@@ -57,7 +57,29 @@
                     @csrf
 
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tujuan Penggunaan (Tipe Akun)</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="relative cursor-pointer group">
+                                <input type="radio" name="role" value="b2c_user" class="peer sr-only" checked>
+                                <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-100 transition duration-200 peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:ring-1 peer-checked:ring-green-500 text-center">
+                                    <i class="fa-solid fa-house-user text-gray-400 group-hover:text-gray-500 peer-checked:text-green-600 text-2xl mb-2 block transition-colors"></i>
+                                    <span class="block text-sm font-bold text-gray-600 peer-checked:text-green-700">Pribadi / B2C</span>
+                                </div>
+                            </label>
+
+                            <label class="relative cursor-pointer group">
+                                <input type="radio" name="role" value="b2b_user" class="peer sr-only">
+                                <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-100 transition duration-200 peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:ring-1 peer-checked:ring-green-500 text-center">
+                                    <i class="fa-solid fa-shop text-gray-400 group-hover:text-gray-500 peer-checked:text-green-600 text-2xl mb-2 block transition-colors"></i>
+                                    <span class="block text-sm font-bold text-gray-600 peer-checked:text-green-700">UMKM / B2B</span>
+                                </div>
+                            </label>
+                        </div>
+                        <x-input-error :messages="$errors->get('role')" class="mt-2 text-sm text-red-600" />
+                    </div>
+
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap / Bisnis</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <i class="fa-regular fa-user text-gray-400"></i>
@@ -98,6 +120,20 @@
                             <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" class="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:bg-white transition" placeholder="Ulangi kata sandi">
                         </div>
                         <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-sm text-red-600" />
+                    </div>
+
+                    <div>
+                        <label for="referral_input" class="block text-sm font-medium text-gray-700 mb-1">
+                            Kode Referal <span class="text-gray-400 font-normal">(Opsional)</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fa-solid fa-gift text-green-500"></i>
+                            </div>
+                            <input id="referral_input" type="text" name="referral_input" value="{{ old('referral_input') }}" class="block w-full pl-11 pr-4 py-3 bg-green-50/50 border border-green-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:bg-white uppercase transition placeholder-gray-400" placeholder="Contoh: ECO12345">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1 mt-1.5"><i class="fa-solid fa-circle-info text-green-500 mr-1"></i>Masukkan kode temanmu untuk memberikan mereka bonus poin!</p>
+                        <x-input-error :messages="$errors->get('referral_input')" class="mt-2 text-sm text-red-600" />
                     </div>
 
                     <button type="submit" class="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-md text-sm font-bold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition transform hover:-translate-y-0.5 duration-200 mt-4">

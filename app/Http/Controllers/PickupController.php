@@ -8,32 +8,50 @@ use Illuminate\Support\Facades\Auth;
 
 class PickupController extends Controller
 {
-    // Menampilkan halaman form penjadwalan
+    // Menampilkan halaman form penjemputan
     public function create()
     {
-        return view('pickup.create');
+        // 1. Ambil semua alamat milik user yang sedang login
+        $addresses = \Illuminate\Support\Facades\Auth::user()->addresses()->orderBy('is_primary', 'desc')->get();
+        
+        // 2. Ambil semua data dari tabel catalogs (Katalog Harga)
+        $catalogs = \App\Models\Catalog::all(); 
+        
+        // 3. Kirim kedua variabel tersebut ke dalam view b2c/b2b penjemputan
+        return view('pickup.create', compact('addresses', 'catalogs'));
     }
 
-    // Memproses data form dan menyimpannya ke database
+    // Menyimpan data penjemputan ke database
     public function store(Request $request)
     {
-        // 1. Validasi input (wajib diisi, dan minimal hari ini/besok)
         $request->validate([
-            'pickup_date' => 'required|date|after:now',
-        ], [
-            'pickup_date.required' => 'Tanggal dan waktu penjemputan wajib diisi.',
-            'pickup_date.after' => 'Waktu penjemputan tidak boleh di masa lalu.',
+            'pickup_date' => 'required|date|after:today',
+            'address_id' => 'required|exists:user_addresses,id', // Validasi alamat yang dipilih
         ]);
 
-        // 2. Simpan ke database
-        Pickup::create([
-            'user_id' => Auth::id(),
+        $user = \Illuminate\Support\Facades\Auth::user();
+        
+        // Cari data alamat lengkap berdasarkan ID yang dipilih user
+        $selectedAddress = \App\Models\UserAddress::where('id', $request->address_id)
+                            ->where('user_id', $user->id)
+                            ->firstOrFail();
+
+        // Rangkai alamat menjadi satu kalimat lengkap untuk disimpan sebagai riwayat permanen
+        $fullAddressText = $selectedAddress->label_name . ' - ' . $selectedAddress->full_address . ', Kota ' . $selectedAddress->city;
+        if($selectedAddress->pic_name) {
+            $fullAddressText .= ' (PIC: ' . $selectedAddress->pic_name . ' - ' . $selectedAddress->phone . ')';
+        } else {
+            $fullAddressText .= ' (Telp: ' . $selectedAddress->phone . ')';
+        }
+
+        \App\Models\Pickup::create([
+            'user_id' => $user->id,
             'pickup_date' => $request->pickup_date,
+            'pickup_address' => $fullAddressText, // Simpan teks alamat lengkapnya
             'status' => 'pending',
-            'total_points_earned' => 0, // Poin awal 0, nanti diisi oleh admin/driver
+            'total_points_earned' => 0,
         ]);
 
-        // 3. Arahkan pengguna ke halaman riwayat dengan pesan sukses
-        return redirect()->route('history.index')->with('success', 'Hore! Permintaan penjemputanmu berhasil dijadwalkan. Mitra kami akan segera memprosesnya.');
+        return redirect()->route('dashboard')->with('success', 'Jadwal penjemputan armada berhasil dibuat!');
     }
 }

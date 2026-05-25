@@ -157,7 +157,7 @@
                     </div>
 
                     <div class="absolute top-10 -right-6 bg-white px-5 py-3 rounded-full shadow-lg border border-gray-100 flex items-center gap-3">
-                        <i class="fa-solid fa-bottle-water text-blue-500 text-xl"></i>
+                        <i class="fa-solid fa-recycle text-blue-500 text-xl"></i>
                         <span class="text-sm font-bold text-gray-700">Plastik PET Diterima</span>
                     </div>
                 </div>
@@ -173,29 +173,34 @@
                 <h2 class="text-3xl md:text-4xl font-black text-gray-900 mt-2">Apa Saja yang Kami Terima?</h2>
             </div>
             
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                
                 <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-blue-300 hover:shadow-lg transition">
-                    <i class="fa-solid fa-bottle-water text-4xl text-blue-500 mb-4"></i>
+                    <i class="fa-solid fa-recycle text-4xl text-blue-500 mb-4"></i>
                     <h3 class="font-bold text-gray-900">Plastik PET</h3>
                     <p class="text-green-600 font-bold mt-2">Rp 2.500 / Kg</p>
                 </div>
+
                 <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-yellow-300 hover:shadow-lg transition">
                     <i class="fa-solid fa-box-open text-4xl text-yellow-600 mb-4"></i>
                     <h3 class="font-bold text-gray-900">Kardus Bekas</h3>
                     <p class="text-green-600 font-bold mt-2">Rp 1.500 / Kg</p>
                 </div>
+
                 <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-gray-400 hover:shadow-lg transition">
-                    <i class="fa-solid fa-prescription-bottle text-4xl text-gray-500 mb-4"></i>
+                    <i class="fa-solid fa-oil-can text-4xl text-gray-500 mb-4"></i>
                     <h3 class="font-bold text-gray-900">Kaleng Aluminium</h3>
                     <p class="text-green-600 font-bold mt-2">Rp 8.000 / Kg</p>
                 </div>
+
                 <div class="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:border-purple-300 hover:shadow-lg transition">
                     <i class="fa-solid fa-plug text-4xl text-purple-500 mb-4"></i>
                     <h3 class="font-bold text-gray-900">E-Waste Kecil</h3>
                     <p class="text-green-600 font-bold mt-2">Bervariasi</p>
                 </div>
+                
             </div>
-        </div>
+            </div>
     </section>
 
     <section id="cara-kerja" class="py-24 bg-gray-50 border-t border-gray-200">
