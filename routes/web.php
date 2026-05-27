@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminCatalogController;
 use App\Http\Controllers\WithdrawalController;
 use App\Http\Controllers\AdminWithdrawalController;
 use App\Http\Controllers\CsrReportController;
+use App\Http\Controllers\DriverController;
 use Illuminate\Support\Facades\Route;
 
 // Panggil Model yang dibutuhkan untuk hitungan statistik di Dashboard Admin
@@ -117,6 +118,16 @@ Route::middleware('auth')->group(function () {
     })->name('leaderboard');
 });
 
+
+Route::middleware(['auth', 'driver'])->prefix('driver')->name('driver.')->group(function () {
+    Route::get('/dashboard', [DriverController::class, 'index'])->name('dashboard');
+    Route::post('/pickups/{id}/claim', [DriverController::class, 'claim'])->name('claim');
+    Route::post('/pickups/{id}/start', [DriverController::class, 'start'])->name('start');
+    Route::get('/pickups/{id}/detail', [DriverController::class, 'detail'])->name('detail');
+    Route::post('/pickups/{id}/verify', [DriverController::class, 'verify'])->name('verify');
+    Route::post('/pickups/{id}/report', [DriverController::class, 'report'])->name('report');
+    Route::get('/history', [DriverController::class, 'history'])->name('history');
+});
 
 // ==========================================
 // RUTE KHUSUS ADMINISTRATOR

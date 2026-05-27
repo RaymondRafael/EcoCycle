@@ -12,12 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         
-        // DAFTARKAN ALIAS MIDDLEWARE ADMIN DI SINI
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'driver' => \App\Http\Middleware\DriverMiddleware::class,
         ]);
 
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
     })->create();

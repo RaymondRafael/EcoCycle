@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-20">
             <div class="flex">
-                <div class="shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.location.href='{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : route('dashboard') }}'">
+                <div class="shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.location.href='{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : (Auth::user()->role === 'driver' ? route('driver.dashboard') : route('dashboard')) }}'">
                     <div class="bg-green-100 p-2.5 rounded-xl shadow-sm">
                         <i class="fa-solid fa-recycle text-green-600 text-xl"></i>
                     </div>
@@ -14,6 +14,13 @@
                     @if(Auth::user()->role === 'admin')
                         <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-base font-bold transition {{ request()->routeIs('admin.dashboard') ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-green-600 hover:border-green-300' }}">
                             {{ __('Admin Panel') }}
+                        </a>
+                    @elseif(Auth::user()->role === 'driver')
+                        <a href="{{ route('driver.dashboard') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-base font-bold transition {{ request()->routeIs('driver.dashboard') ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-green-600 hover:border-green-300' }}">
+                            {{ __('Driver Panel') }}
+                        </a>
+                        <a href="{{ route('driver.history') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-base font-bold transition {{ request()->routeIs('driver.history') ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-green-600 hover:border-green-300' }}">
+                            {{ __('Riwayat Kerja') }}
                         </a>
                     @else
                         <a href="{{ route('dashboard') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-base font-bold transition {{ request()->routeIs('dashboard') ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-green-600 hover:border-green-300' }}">
@@ -84,6 +91,13 @@
             @if(Auth::user()->role === 'admin')
                 <a href="{{ route('admin.dashboard') }}" class="block w-full ps-3 pe-4 py-3 border-l-4 font-bold text-base transition {{ request()->routeIs('admin.dashboard') ? 'border-green-500 text-green-600 bg-green-50' : 'border-transparent text-gray-600 hover:text-green-600 hover:bg-green-50 hover:border-green-300' }}">
                     <i class="fa-solid fa-user-shield mr-2"></i> {{ __('Admin Panel') }}
+                </a>
+            @elseif(Auth::user()->role === 'driver')
+                <a href="{{ route('driver.dashboard') }}" class="block w-full ps-3 pe-4 py-3 border-l-4 font-bold text-base transition {{ request()->routeIs('driver.dashboard') ? 'border-green-500 text-green-600 bg-green-50' : 'border-transparent text-gray-600 hover:text-green-600 hover:bg-green-50 hover:border-green-300' }}">
+                    <i class="fa-solid fa-gauge mr-2"></i> {{ __('Driver Panel') }}
+                </a>
+                <a href="{{ route('driver.history') }}" class="block w-full ps-3 pe-4 py-3 border-l-4 font-bold text-base transition {{ request()->routeIs('driver.history') ? 'border-green-500 text-green-600 bg-green-50' : 'border-transparent text-gray-600 hover:text-green-600 hover:bg-green-50 hover:border-green-300' }}">
+                    <i class="fa-solid fa-truck-ramp-box mr-2"></i> {{ __('Riwayat Kerja') }}
                 </a>
             @else
                 <a href="{{ route('dashboard') }}" class="block w-full ps-3 pe-4 py-3 border-l-4 font-bold text-base transition {{ request()->routeIs('dashboard') ? 'border-green-500 text-green-600 bg-green-50' : 'border-transparent text-gray-600 hover:text-green-600 hover:bg-green-50 hover:border-green-300' }}">

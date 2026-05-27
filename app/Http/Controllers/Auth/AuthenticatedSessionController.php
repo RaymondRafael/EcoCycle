@@ -28,15 +28,14 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // --- TAMBAHKAN LOGIKA PENGATUR LALU LINTAS DI SINI ---
-        
-        // Cek jika yang login adalah admin
         if ($request->user()->role === 'admin') {
-            // Arahkan ke dashboard admin
             return redirect()->route('admin.dashboard');
         }
 
-        // Jika bukan admin (user biasa), arahkan ke rute aslinya (dashboard biasa)
+        if ($request->user()->role === 'driver') {
+            return redirect()->route('driver.dashboard');
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
