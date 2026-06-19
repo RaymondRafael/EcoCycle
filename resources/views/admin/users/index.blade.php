@@ -50,11 +50,13 @@
                                     
                                     <td class="p-4">
                                         @if($user->role === 'admin')
-                                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide border border-red-200"><i class="fa-solid fa-user-shield mr-1"></i> Admin</span>
+                                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide border border-red-200 w-fit flex items-center gap-1"><i class="fa-solid fa-user-shield"></i> Admin</span>
+                                        @elseif($user->role === 'driver')
+                                            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide border border-blue-200 w-fit flex items-center gap-1"><i class="fa-solid fa-motorcycle"></i> Mitra Kurir</span>
                                         @elseif($user->role === 'b2b_user')
-                                            <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide border border-teal-200"><i class="fa-solid fa-shop mr-1"></i> Bisnis / UMKM</span>
+                                            <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide border border-teal-200 w-fit flex items-center gap-1"><i class="fa-solid fa-shop"></i> Bisnis / UMKM</span>
                                         @else
-                                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide border border-green-200"><i class="fa-solid fa-user mr-1"></i> Personal (B2C)</span>
+                                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide border border-green-200 w-fit flex items-center gap-1"><i class="fa-solid fa-user"></i> Personal (B2C)</span>
                                         @endif
                                         <div class="text-xs text-gray-400 mt-2">Gabung: {{ $user->created_at->format('d M Y') }}</div>
                                     </td>

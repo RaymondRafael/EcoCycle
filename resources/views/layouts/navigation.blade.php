@@ -3,10 +3,10 @@
         <div class="flex justify-between h-20">
             <div class="flex">
                 <div class="shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.location.href='{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : (Auth::user()->role === 'driver' ? route('driver.dashboard') : route('dashboard')) }}'">
-                    <div class="bg-green-100 p-2.5 rounded-xl shadow-sm">
-                        <i class="fa-solid fa-recycle text-green-600 text-xl"></i>
+                    <div class="{{ Auth::user()->role === 'driver' ? 'bg-blue-100' : 'bg-green-100' }} p-2.5 rounded-xl shadow-sm">
+                        <i class="fa-solid {{ Auth::user()->role === 'driver' ? 'fa-truck-fast text-blue-600' : 'fa-recycle text-green-600' }} text-xl"></i>
                     </div>
-                    <span class="font-black text-2xl text-gray-900 tracking-tight hidden sm:block">Eco<span class="text-green-600">Cycle</span></span>
+                    <span class="font-black text-2xl text-gray-900 tracking-tight hidden sm:block">Eco<span class="{{ Auth::user()->role === 'driver' ? 'text-blue-600' : 'text-green-600' }}">Cycle</span></span>
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
@@ -16,11 +16,11 @@
                             {{ __('Admin Panel') }}
                         </a>
                     @elseif(Auth::user()->role === 'driver')
-                        <a href="{{ route('driver.dashboard') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-base font-bold transition {{ request()->routeIs('driver.dashboard') ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-green-600 hover:border-green-300' }}">
-                            {{ __('Driver Panel') }}
+                        <a href="{{ route('driver.dashboard') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-base font-bold transition {{ request()->routeIs('driver.dashboard') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-blue-600 hover:border-blue-300' }}">
+                            <i class="fa-solid fa-route mr-2"></i> {{ __('Manifest Penjemputan') }}
                         </a>
-                        <a href="{{ route('driver.history') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-base font-bold transition {{ request()->routeIs('driver.history') ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-green-600 hover:border-green-300' }}">
-                            {{ __('Riwayat Kerja') }}
+                        <a href="{{ route('driver.history') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-base font-bold transition {{ request()->routeIs('driver.history') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-blue-600 hover:border-blue-300' }}">
+                            <i class="fa-solid fa-clipboard-check mr-2"></i> {{ __('Riwayat Kurir') }}
                         </a>
                     @else
                         <a href="{{ route('dashboard') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-base font-bold transition {{ request()->routeIs('dashboard') ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-green-600 hover:border-green-300' }}">
@@ -40,9 +40,9 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-4 py-2 border border-gray-200 text-sm leading-4 font-bold rounded-full text-gray-700 bg-gray-50 hover:bg-green-50 hover:border-green-200 hover:text-green-700 focus:outline-none transition ease-in-out duration-150">
-                            <div class="w-6 h-6 rounded-full {{ Auth::user()->role === 'admin' ? 'bg-gray-800 text-white' : 'bg-green-200 text-green-700' }} flex items-center justify-center mr-2">
-                                <i class="fa-solid {{ Auth::user()->role === 'admin' ? 'fa-user-shield' : 'fa-user' }} text-xs"></i>
+                        <button class="inline-flex items-center px-4 py-2 border border-gray-200 text-sm leading-4 font-bold rounded-full text-gray-700 bg-gray-50 hover:bg-gray-100 hover:border-gray-300 focus:outline-none transition ease-in-out duration-150">
+                            <div class="w-6 h-6 rounded-full {{ Auth::user()->role === 'admin' ? 'bg-gray-800 text-white' : (Auth::user()->role === 'driver' ? 'bg-blue-200 text-blue-700' : 'bg-green-200 text-green-700') }} flex items-center justify-center mr-2">
+                                <i class="fa-solid {{ Auth::user()->role === 'admin' ? 'fa-user-shield' : (Auth::user()->role === 'driver' ? 'fa-motorcycle' : 'fa-user') }} text-xs"></i>
                             </div>
                             <div>{{ Auth::user()->name }}</div>
                             <div class="ms-1">
@@ -93,11 +93,11 @@
                     <i class="fa-solid fa-user-shield mr-2"></i> {{ __('Admin Panel') }}
                 </a>
             @elseif(Auth::user()->role === 'driver')
-                <a href="{{ route('driver.dashboard') }}" class="block w-full ps-3 pe-4 py-3 border-l-4 font-bold text-base transition {{ request()->routeIs('driver.dashboard') ? 'border-green-500 text-green-600 bg-green-50' : 'border-transparent text-gray-600 hover:text-green-600 hover:bg-green-50 hover:border-green-300' }}">
-                    <i class="fa-solid fa-gauge mr-2"></i> {{ __('Driver Panel') }}
+                <a href="{{ route('driver.dashboard') }}" class="block w-full ps-3 pe-4 py-3 border-l-4 font-bold text-base transition {{ request()->routeIs('driver.dashboard') ? 'border-blue-500 text-blue-600 bg-blue-50' : 'border-transparent text-gray-600 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-300' }}">
+                    <i class="fa-solid fa-route mr-2 text-blue-600"></i> {{ __('Manifest Penjemputan') }}
                 </a>
-                <a href="{{ route('driver.history') }}" class="block w-full ps-3 pe-4 py-3 border-l-4 font-bold text-base transition {{ request()->routeIs('driver.history') ? 'border-green-500 text-green-600 bg-green-50' : 'border-transparent text-gray-600 hover:text-green-600 hover:bg-green-50 hover:border-green-300' }}">
-                    <i class="fa-solid fa-truck-ramp-box mr-2"></i> {{ __('Riwayat Kerja') }}
+                <a href="{{ route('driver.history') }}" class="block w-full ps-3 pe-4 py-3 border-l-4 font-bold text-base transition {{ request()->routeIs('driver.history') ? 'border-blue-500 text-blue-600 bg-blue-50' : 'border-transparent text-gray-600 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-300' }}">
+                    <i class="fa-solid fa-clipboard-check mr-2 text-blue-600"></i> {{ __('Riwayat Kurir') }}
                 </a>
             @else
                 <a href="{{ route('dashboard') }}" class="block w-full ps-3 pe-4 py-3 border-l-4 font-bold text-base transition {{ request()->routeIs('dashboard') ? 'border-green-500 text-green-600 bg-green-50' : 'border-transparent text-gray-600 hover:text-green-600 hover:bg-green-50 hover:border-green-300' }}">
@@ -115,8 +115,8 @@
 
         <div class="pt-4 pb-1 border-t border-gray-100 bg-gray-50">
             <div class="px-4 flex items-center gap-3 mb-3">
-                <div class="w-10 h-10 rounded-full {{ Auth::user()->role === 'admin' ? 'bg-gray-800 text-white' : 'bg-green-200 text-green-700' }} flex items-center justify-center">
-                    <i class="fa-solid {{ Auth::user()->role === 'admin' ? 'fa-user-shield' : 'fa-user' }} text-lg"></i>
+                <div class="w-10 h-10 rounded-full {{ Auth::user()->role === 'admin' ? 'bg-gray-800 text-white' : (Auth::user()->role === 'driver' ? 'bg-blue-200 text-blue-700' : 'bg-green-200 text-green-700') }} flex items-center justify-center">
+                    <i class="fa-solid {{ Auth::user()->role === 'admin' ? 'fa-user-shield' : (Auth::user()->role === 'driver' ? 'fa-motorcycle' : 'fa-user') }} text-lg"></i>
                 </div>
                 <div>
                     <div class="font-bold text-base text-gray-800">{{ Auth::user()->name }}</div>

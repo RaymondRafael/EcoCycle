@@ -26,14 +26,14 @@
                     </div>
                 </div>
 
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto pb-32">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-gray-900 text-white text-sm uppercase tracking-wider">
                                 <th class="p-4 font-bold">ID & Tanggal</th>
                                 <th class="p-4 font-bold">Pengguna / Klien</th>
                                 <th class="p-4 font-bold">Status Saat Ini</th>
-                                <th class="p-4 font-bold">Aksi & Beri Poin</th>
+                                <th class="p-4 font-bold">Aksi Ubah Status</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
@@ -64,22 +64,48 @@
                                         @endif
                                     </td>
                                     <td class="p-4">
-                                        <form action="{{ route('admin.pickups.update', $pickup->id) }}" method="POST" class="flex flex-col sm:flex-row items-center gap-2">
+                                        <form action="{{ route('admin.pickups.update', $pickup->id) }}" method="POST" class="flex flex-col sm:flex-row items-center gap-3">
                                             @csrf
                                             @method('PUT')
                                             
-                                            <select name="status" class="text-sm border-gray-200 rounded-lg focus:ring-gray-900 focus:border-gray-900 {{ $pickup->status == 'completed' ? 'bg-gray-100 cursor-not-allowed' : '' }}" {{ $pickup->status == 'completed' ? 'disabled' : '' }}>
-                                                <option value="pending" {{ $pickup->status == 'pending' ? 'selected' : '' }}>Menunggu</option>
-                                                <option value="on_the_way" {{ $pickup->status == 'on_the_way' ? 'selected' : '' }}>Armada Di Jalan</option>
-                                                <option value="completed" {{ $pickup->status == 'completed' ? 'selected' : '' }}>Selesai</option>
-                                                <option value="cancelled" {{ $pickup->status == 'cancelled' ? 'selected' : '' }}>Batalkan</option>
-                                            </select>
+                                            <div class="relative custom-select-wrapper w-44">
+                                                <input type="hidden" name="status" value="{{ $pickup->status }}">
+                                                
+                                                <button type="button" class="select-button w-full flex items-center justify-between border border-gray-200 rounded-lg px-3 py-2 text-sm font-bold text-gray-700 transition focus:ring-2 focus:ring-gray-900 focus:outline-none {{ $pickup->status == 'completed' ? 'bg-gray-100 opacity-70 cursor-not-allowed' : 'bg-white hover:bg-gray-50 shadow-sm cursor-pointer' }}" {{ $pickup->status == 'completed' ? 'disabled' : '' }}>
+                                                    <span class="selected-text flex items-center gap-2">
+                                                        @if($pickup->status == 'pending') 
+                                                            <i class="fa-solid fa-hourglass-half text-yellow-500 w-4 text-center"></i> Menunggu
+                                                        @elseif($pickup->status == 'on_the_way') 
+                                                            <i class="fa-solid fa-truck-fast text-blue-500 w-4 text-center"></i> Armada Di Jalan
+                                                        @elseif($pickup->status == 'completed') 
+                                                            <i class="fa-solid fa-check text-green-500 w-4 text-center"></i> Selesai
+                                                        @elseif($pickup->status == 'cancelled') 
+                                                            <i class="fa-solid fa-xmark text-red-500 w-4 text-center"></i> Batalkan
+                                                        @endif
+                                                    </span>
+                                                    <i class="fa-solid fa-chevron-down text-xs text-gray-400 chevron-icon transition-transform"></i>
+                                                </button>
 
-                                            <input type="number" name="points" value="{{ $pickup->total_points_earned > 0 ? $pickup->total_points_earned : '' }}" placeholder="Jml Poin / Rp" class="text-sm border-gray-200 rounded-lg w-28 focus:ring-green-500 focus:border-green-500 {{ $pickup->status == 'completed' ? 'bg-gray-100 cursor-not-allowed' : '' }}" {{ $pickup->status == 'completed' ? 'disabled' : '' }}>
-
+                                                <div class="select-menu absolute z-50 left-0 w-full mt-1 bg-white border border-gray-100 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] opacity-0 invisible transform -translate-y-2 transition-all duration-200 overflow-hidden">
+                                                    <ul class="py-1 text-sm font-bold text-gray-600">
+                                                        <li class="px-3 py-2.5 hover:bg-yellow-50 hover:text-yellow-700 cursor-pointer flex items-center gap-2 transition option-item" data-value="pending">
+                                                            <i class="fa-solid fa-hourglass-half text-yellow-500 w-4 text-center"></i> Menunggu
+                                                        </li>
+                                                        <li class="px-3 py-2.5 hover:bg-blue-50 hover:text-blue-700 cursor-pointer flex items-center gap-2 transition option-item" data-value="on_the_way">
+                                                            <i class="fa-solid fa-truck-fast text-blue-500 w-4 text-center"></i> Armada Di Jalan
+                                                        </li>
+                                                        <li class="px-3 py-2.5 hover:bg-green-50 hover:text-green-700 cursor-pointer flex items-center gap-2 transition option-item" data-value="completed">
+                                                            <i class="fa-solid fa-check text-green-500 w-4 text-center"></i> Selesai
+                                                        </li>
+                                                        <li class="px-3 py-2.5 hover:bg-red-50 hover:text-red-700 cursor-pointer flex items-center gap-2 transition option-item" data-value="cancelled">
+                                                            <i class="fa-solid fa-xmark text-red-500 w-4 text-center"></i> Batalkan
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
                                             @if($pickup->status !== 'completed')
-                                                <button type="submit" class="bg-gray-900 hover:bg-black text-white px-3 py-2 rounded-lg font-bold text-sm transition shadow-md">
-                                                    <i class="fa-solid fa-floppy-disk"></i>
+                                                <button type="submit" class="bg-gray-900 hover:bg-black text-white px-3 py-2 rounded-lg font-bold text-sm transition shadow-md shrink-0 flex items-center gap-1.5">
+                                                    <i class="fa-solid fa-floppy-disk"></i> Simpan
                                                 </button>
                                             @endif
                                         </form>
@@ -100,4 +126,81 @@
 
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const wrappers = document.querySelectorAll('.custom-select-wrapper');
+
+            wrappers.forEach(wrapper => {
+                const btn = wrapper.querySelector('.select-button');
+                const menu = wrapper.querySelector('.select-menu');
+                const chevron = wrapper.querySelector('.chevron-icon');
+                const input = wrapper.querySelector('input[name="status"]');
+                const selectedText = wrapper.querySelector('.selected-text');
+                const options = wrapper.querySelectorAll('.option-item');
+
+                // Jika tombol di-disable (karena status Selesai), abaikan script
+                if(btn.disabled) return;
+
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault(); 
+                    e.stopPropagation();
+                    
+                    // Tutup semua menu dropdown lain yang sedang terbuka di tabel
+                    document.querySelectorAll('.select-menu').forEach(m => {
+                        if (m !== menu) {
+                            m.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                            m.classList.add('opacity-0', 'invisible', '-translate-y-2');
+                        }
+                    });
+                    document.querySelectorAll('.chevron-icon').forEach(c => {
+                        if (c !== chevron) c.classList.remove('rotate-180');
+                    });
+
+                    // Buka/Tutup menu dropdown baris ini
+                    const isExpanded = menu.classList.contains('opacity-100');
+                    if(isExpanded) {
+                        menu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                        menu.classList.add('opacity-0', 'invisible', '-translate-y-2');
+                        chevron.classList.remove('rotate-180');
+                    } else {
+                        menu.classList.add('opacity-100', 'visible', 'translate-y-0');
+                        menu.classList.remove('opacity-0', 'invisible', '-translate-y-2');
+                        chevron.classList.add('rotate-180');
+                    }
+                });
+
+                // Logika ketika salah satu opsi dipilih
+                options.forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const val = option.getAttribute('data-value');
+                        const html = option.innerHTML;
+
+                        // Perbarui nilai input form tersembunyi
+                        input.value = val;
+                        
+                        // Perbarui tampilan teks & ikon tombol utama
+                        selectedText.innerHTML = html;
+
+                        // Tutup menu kembali
+                        menu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                        menu.classList.add('opacity-0', 'invisible', '-translate-y-2');
+                        chevron.classList.remove('rotate-180');
+                    });
+                });
+            });
+
+            // Tutup dropdown jika Admin mengklik di luar area menu
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.select-menu').forEach(m => {
+                    m.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                    m.classList.add('opacity-0', 'invisible', '-translate-y-2');
+                });
+                document.querySelectorAll('.chevron-icon').forEach(c => {
+                    c.classList.remove('rotate-180');
+                });
+            });
+        });
+    </script>
 </x-app-layout>

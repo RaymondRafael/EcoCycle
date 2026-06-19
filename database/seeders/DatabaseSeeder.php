@@ -8,17 +8,18 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
+    /**
+     * Seed the application's database.
+     */
     public function run(): void
     {
-        User::updateOrCreate(
-            ['email' => 'driver@ecocycle.com'],
-            [
-                'name' => 'Driver EcoCycle',
-                'password' => \Illuminate\Support\Facades\Hash::make('password123'),
-                'role' => 'driver',
-            ]
-        );
+        // 1. Matikan pembuatan user bawaan agar tidak bentrok dengan akun yang sudah ada
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
 
+        // 2. Data Awal Katalog Harga Sampah
         $catalogs = [
             [
                 'name' => 'Plastik', 
@@ -54,24 +55,25 @@ class DatabaseSeeder extends Seeder
             ]
         ];
 
+        // 3. Masukkan katalog ke database secara aman (Tidak akan dobel jika di-seed ulang)
         foreach ($catalogs as $item) {
             Catalog::updateOrCreate(
-                ['name' => $item['name']],
-                $item
+                ['name' => $item['name']], // Cek apakah nama limbah sudah ada
+                $item // Jika belum ada buat baru, jika sudah ada maka perbarui harganya
             );
         }
+        $this->command->info('Katalog harga berhasil ditambahkan/diperbarui secara aman!');
 
-        foreach ($catalogs as $item) {
-            \App\Models\WasteCategory::updateOrCreate(
-                ['name' => $item['name']],
-                [
-                    'name' => $item['name'],
-                    'point_reward_per_kg' => $item['price_b2c'],
-                    'price_to_factory_per_kg' => $item['price_b2b'],
-                ]
-            );
-        }
-
-        $this->command->info('Katalog harga & Kategori sampah berhasil ditambahkan/diperbarui secara aman!');
+        // 4. Tambahkan Akun Khusus Driver / Kurir secara aman
+        User::updateOrCreate(
+            ['email' => 'driver@ecocycle.com'], // Unik parameter sebagai acuan cek data
+            [
+                'name' => 'Budi Santana (Kurir)',
+                'password' => bcrypt('password123'), // Password untuk pengujian login
+                'role' => 'driver', // Menyematkan role khusus driver
+                'phone' => '081234567890',
+            ]
+        );
+        $this->command->info('Akun driver berhasil ditambahkan/diperbarui secara aman!');
     }
 }

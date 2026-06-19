@@ -41,6 +41,7 @@
                 </div>
             </div>
 
+            <!-- TAB B2C (PERSONAL) -->
             <div x-show="activeTab === 'b2c'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0" style="display: none;">
                 <div class="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden">
                     <div class="bg-green-50/50 p-6 border-b border-gray-100 text-center">
@@ -65,7 +66,28 @@
                                     </div>
                                     <div>
                                         <h4 class="font-bold text-gray-900 text-base sm:text-lg flex items-center gap-2">
-                                            {{ $user->name }}
+                                            @php
+                                                // Logika Sensor Nama B2C
+                                                $name = trim($user->name);
+                                                $len = strlen($name);
+                                                
+                                                if ($user->id === $currentUser->id) {
+                                                    // Jika ini akun yang sedang login, tampilkan nama penuh
+                                                    $displayName = $name;
+                                                } else {
+                                                    // Jika akun orang lain, lakukan sensor
+                                                    if ($len > 3) {
+                                                        $displayName = substr($name, 0, 2) . str_repeat('*', $len - 3) . substr($name, -1);
+                                                    } elseif ($len === 3) {
+                                                        $displayName = substr($name, 0, 1) . '*' . substr($name, -1);
+                                                    } else {
+                                                        $displayName = substr($name, 0, 1) . str_repeat('*', $len > 1 ? $len - 1 : 1);
+                                                    }
+                                                }
+                                            @endphp
+                                            
+                                            {{ $displayName }}
+
                                             @if($user->id === $currentUser->id)
                                                 <span class="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-md uppercase tracking-wider">Anda</span>
                                             @endif
@@ -87,6 +109,7 @@
                 </div>
             </div>
 
+            <!-- TAB B2B (BISNIS) -->
             <div x-show="activeTab === 'b2b'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0" style="display: none;">
                 <div class="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden">
                     <div class="bg-teal-50/50 p-6 border-b border-gray-100 text-center">
@@ -111,7 +134,28 @@
                                     </div>
                                     <div>
                                         <h4 class="font-bold text-gray-900 text-base sm:text-lg flex items-center gap-2">
-                                            {{ $user->name }}
+                                            @php
+                                                // Logika Sensor Nama B2B
+                                                $name = trim($user->name);
+                                                $len = strlen($name);
+                                                
+                                                if ($user->id === $currentUser->id) {
+                                                    // Jika ini akun yang sedang login, tampilkan nama penuh
+                                                    $displayName = $name;
+                                                } else {
+                                                    // Jika akun orang lain, lakukan sensor
+                                                    if ($len > 3) {
+                                                        $displayName = substr($name, 0, 2) . str_repeat('*', $len - 3) . substr($name, -1);
+                                                    } elseif ($len === 3) {
+                                                        $displayName = substr($name, 0, 1) . '*' . substr($name, -1);
+                                                    } else {
+                                                        $displayName = substr($name, 0, 1) . str_repeat('*', $len > 1 ? $len - 1 : 1);
+                                                    }
+                                                }
+                                            @endphp
+                                            
+                                            {{ $displayName }}
+
                                             @if($user->id === $currentUser->id)
                                                 <span class="bg-teal-100 text-teal-700 text-[10px] px-2 py-0.5 rounded-md uppercase tracking-wider">Bisnis Anda</span>
                                             @endif

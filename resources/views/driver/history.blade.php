@@ -1,106 +1,103 @@
 <x-app-layout>
-    <div class="min-h-screen bg-gray-50 pb-12">
-        <div class="bg-gradient-to-r from-blue-700 to-indigo-900 pb-24 pt-8">
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center gap-4">
-                    <a href="{{ route('driver.dashboard') }}" class="bg-white/10 hover:bg-white/20 text-white w-10 h-10 rounded-full flex items-center justify-center transition border border-white/15">
-                        <i class="fa-solid fa-arrow-left"></i>
+    <x-slot name="header">
+        <h2 class="font-black text-2xl text-slate-900 leading-tight flex items-center gap-3">
+            <div class="bg-slate-900 p-2 rounded-xl text-white text-base">
+                <i class="fa-solid fa-clipboard-check"></i>
+            </div>
+            {{ __('Riwayat Penjemputan') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-6 bg-slate-100 min-h-screen">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h3 class="text-lg font-black text-slate-800">Log Aktivitas Selesai</h3>
+                    <p class="text-xs text-slate-500">Daftar semua penjemputan yang telah rampung atau dibatalkan.</p>
+                </div>
+
+                <!-- TOMBOL TABS FILTER CIRI KHUSUS B2C / B2B -->
+                <div class="bg-white p-1 rounded-xl border border-slate-200 flex gap-1 self-start sm:self-auto shadow-sm">
+                    <a href="{{ route('driver.history') }}" 
+                       class="px-4 py-2 rounded-lg text-xs font-black transition-all {{ !request()->query('type') ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900' }}">
+                        Semua
                     </a>
-                    <div>
-                        <h2 class="text-3xl font-black text-white tracking-tight">
-                            Riwayat Kerja Driver 📦
-                        </h2>
-                        <p class="text-blue-200 mt-1">Daftar rekapitulasi penjemputan sampah yang telah Anda selesaikan</p>
-                    </div>
+                    <a href="{{ route('driver.history', ['type' => 'b2c']) }}" 
+                       class="px-4 py-2 rounded-lg text-xs font-black transition-all {{ request()->query('type') === 'b2c' ? 'bg-green-600 text-white shadow-sm' : 'text-slate-600 hover:text-green-600' }}">
+                        Personal / B2C
+                    </a>
+                    <a href="{{ route('driver.history', ['type' => 'b2b']) }}" 
+                       class="px-4 py-2 rounded-lg text-xs font-black transition-all {{ request()->query('type') === 'b2b' ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-600 hover:text-teal-600' }}">
+                        Bisnis / B2B
+                    </a>
                 </div>
             </div>
-        </div>
 
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-10">
-            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-black text-gray-900">Rekap Tugas Harian/Bulanan</h3>
-                    <span class="text-xs font-bold bg-blue-50 text-blue-600 px-3 py-1 rounded-full border border-blue-100">
-                        Total Selesai: {{ $history->where('status', 'completed')->count() }} Tugas
-                    </span>
-                </div>
+            <div class="space-y-4">
+                @forelse($historyTasks as $task)
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm relative overflow-hidden">
+                        
+                        <!-- Jalur Warna Status -->
+                        <div class="absolute top-0 left-0 bottom-0 w-2 {{ $task->status === 'completed' ? 'bg-emerald-500' : 'bg-red-500' }}"></div>
 
-                <div class="space-y-6">
-                    @forelse($history as $item)
-                        <div class="border border-gray-100 rounded-3xl p-6 hover:shadow-md transition bg-gradient-to-br from-white to-gray-50/50 flex flex-col md:flex-row justify-between gap-6">
-                            <div class="flex-1">
-                                <div class="flex flex-wrap items-center gap-3 mb-3">
-                                    <span class="text-xs font-black px-3 py-1 rounded-full 
-                                        {{ $item->status == 'completed' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-red-100 text-red-700 border border-red-200' }}">
-                                        {{ strtoupper($item->status) }}
-                                    </span>
-                                    <span class="text-xs text-gray-400 font-semibold">
-                                        <i class="fa-regular fa-calendar mr-1"></i> {{ \Carbon\Carbon::parse($item->updated_at)->format('d M Y, H:i') }}
-                                    </span>
+                        <div class="pl-2">
+                            <!-- Header Kartu -->
+                            <div class="flex justify-between items-start gap-4 mb-3">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-sm font-black text-slate-800">{{ $task->user->name }}</span>
+                                        
+                                        <!-- INDIKATOR BADGE JENIS AKUN -->
+                                        @if($task->user->role === 'b2b_user')
+                                            <span class="text-[9px] font-black uppercase tracking-widest bg-teal-50 text-teal-700 border border-teal-200 px-2 py-0.5 rounded-md"><i class="fa-solid fa-building text-[8px] mr-0.5"></i> B2B</span>
+                                        @else
+                                            <span class="text-[9px] font-black uppercase tracking-widest bg-green-50 text-green-700 border border-green-200 px-2 py-0.5 rounded-md"><i class="fa-solid fa-user text-[8px] mr-0.5"></i> B2C</span>
+                                        @endif
+                                    </div>
+                                    <span class="text-[10px] text-slate-400 block"><i class="fa-regular fa-clock mr-1"></i> Selesai: {{ \Carbon\Carbon::parse($task->updated_at)->format('d M Y - H:i') }}</span>
                                 </div>
-
-                                <h4 class="font-extrabold text-gray-900 text-lg mb-1">{{ $item->user->name }}</h4>
-                                <p class="text-gray-600 text-sm mb-4 leading-relaxed">
-                                    <i class="fa-solid fa-location-dot text-red-500 mr-1shrink-0"></i> {{ $item->pickup_address }}
-                                </p>
-
-                                @if($item->driver_notes)
-                                    <div class="bg-gray-100 rounded-2xl p-4 mb-4 text-xs font-semibold text-gray-600 border border-gray-200">
-                                        <i class="fa-solid fa-note-sticky text-blue-500 mr-1.5 text-sm"></i>
-                                        <span>Catatan Driver: {{ $item->driver_notes }}</span>
-                                    </div>
-                                @endif
-
-                                @if($item->status == 'completed')
-                                    <div class="bg-blue-50/40 rounded-2xl p-4 border border-blue-100/50">
-                                        <h5 class="text-xs font-black text-blue-800 uppercase tracking-wider mb-2">Sampah Daur Ulang</h5>
-                                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-                                            @foreach($item->details as $detail)
-                                                <div>
-                                                    <p class="text-gray-400 font-bold">{{ $detail->wasteCategory->name }}</p>
-                                                    <p class="text-gray-800 font-black text-sm">{{ number_format($detail->weight_kg, 2) }} Kg</p>
-                                                    <p class="text-green-600 font-bold">+{{ number_format($detail->subtotal_points) }} Pts</p>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-
-                            <div class="w-full md:w-48 flex flex-col items-center md:items-end justify-between gap-4 border-t md:border-t-0 md:border-l border-gray-100 pt-6 md:pt-0 md:pl-6 shrink-0">
-                                <div class="text-center md:text-right w-full">
-                                    <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-0.5">Total Hadiah Poin</p>
-                                    @if($item->status == 'completed')
-                                        <h3 class="text-3xl font-black text-green-600">+{{ number_format($item->total_points_earned) }} <span class="text-xs text-gray-400 font-medium">Pts</span></h3>
+                                <div>
+                                    @if($task->status === 'completed')
+                                        <span class="text-[10px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-md flex items-center gap-1">
+                                            <i class="fa-solid fa-check"></i> Selesai
+                                        </span>
                                     @else
-                                        <h3 class="text-xl font-extrabold text-red-600">0 Pts</h3>
+                                        <span class="text-[10px] font-black uppercase tracking-wider bg-red-50 text-red-700 border border-red-200 px-2.5 py-1 rounded-md flex items-center gap-1">
+                                            <i class="fa-solid fa-xmark"></i> Batal
+                                        </span>
                                     @endif
                                 </div>
+                            </div>
 
-                                @if($item->photo)
-                                    <div class="w-full h-32 rounded-2xl overflow-hidden shadow-sm relative group cursor-pointer border border-gray-200">
-                                        <img src="{{ asset($item->photo) }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" alt="Bukti Foto">
-                                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold">
-                                            <i class="fa-solid fa-expand text-lg"></i>
-                                        </div>
+                            <!-- Detail Sampah & Poin (Hanya muncul jika Selesai) -->
+                            @if($task->status === 'completed')
+                                <div class="bg-slate-50 border border-slate-100 p-3 rounded-xl flex justify-between items-center mt-2">
+                                    <div class="flex flex-wrap gap-2">
+                                        @if($task->weight_plastic > 0) <span class="text-xs text-slate-600 bg-white px-2 py-1 border border-slate-200 rounded-md font-bold text-blue-600" title="Plastik">{{ floatval($task->weight_plastic) }}kg</span> @endif
+                                        @if($task->weight_paper > 0) <span class="text-xs text-slate-600 bg-white px-2 py-1 border border-slate-200 rounded-md font-bold text-yellow-600" title="Kertas">{{ floatval($task->weight_paper) }}kg</span> @endif
+                                        @if($task->weight_metal > 0) <span class="text-xs text-slate-600 bg-white px-2 py-1 border border-slate-200 rounded-md font-bold text-gray-600" title="Logam">{{ floatval($task->weight_metal) }}kg</span> @endif
+                                        @if($task->weight_glass > 0) <span class="text-xs text-slate-600 bg-white px-2 py-1 border border-slate-200 rounded-md font-bold text-teal-600" title="Kaca">{{ floatval($task->weight_glass) }}kg</span> @endif
                                     </div>
-                                @endif
-                            </div>
+                                    <div class="text-right shrink-0 ml-4">
+                                        <span class="text-[10px] font-bold text-slate-400 block uppercase">Total Poin</span>
+                                        <span class="font-black text-emerald-600">+{{ number_format($task->total_points_earned, 0, ',', '.') }}</span>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
-                    @empty
-                        <div class="text-center py-16">
-                            <div class="w-24 h-24 mx-auto bg-gray-50 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa-solid fa-clock-rotate-left text-4xl text-gray-300"></i>
-                            </div>
-                            <h4 class="text-lg font-bold text-gray-900 mb-2">Riwayat tugas masih kosong</h4>
-                            <p class="text-gray-500 max-w-sm mx-auto">Anda belum menyelesaikan atau membatalkan tugas penjemputan sampah apa pun.</p>
-                            <a href="{{ route('driver.dashboard') }}" class="inline-block mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold transition shadow-md shadow-blue-100">
-                                Ambil Tugas Baru
-                            </a>
+                    </div>
+                @empty
+                    <div class="bg-white p-12 rounded-3xl border border-slate-200 text-center shadow-sm">
+                        <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl shadow-inner">
+                            <i class="fa-solid fa-filter-circle-xmark"></i>
                         </div>
-                    @endforelse
-                </div>
+                        <h4 class="font-black text-slate-800 mb-1">Riwayat Kosong</h4>
+                        <p class="text-sm text-slate-500 max-w-xs mx-auto">Tidak ada penjemputan yang sesuai dengan filter ini.</p>
+                    </div>
+                @endforelse
             </div>
+
         </div>
     </div>
 </x-app-layout>

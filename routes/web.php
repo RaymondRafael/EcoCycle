@@ -26,13 +26,17 @@ Route::get('/', function () {
 // ==========================================
 // Rute Dashboard
 Route::get('/dashboard', function () {
-    // Ambil 3 riwayat penjemputan terakhir milik user yang sedang login
+    // 1. CEGAT DRIVER: Jika driver nyasar ke rute ini, pantulkan ke dashboard miliknya
+    if (\Illuminate\Support\Facades\Auth::user()->role === 'driver') {
+        return redirect()->route('driver.dashboard');
+    }
+
+    // 2. Lanjutkan kode yang sudah ada untuk B2C & B2B...
     $recentPickups = \App\Models\Pickup::where('user_id', \Illuminate\Support\Facades\Auth::id())
                         ->orderBy('created_at', 'desc')
                         ->take(3)
                         ->get();
 
-    // Kirim data $recentPickups ke tampilan dashboard yang sesuai
     if (\Illuminate\Support\Facades\Auth::user()->role === 'b2b_user') {
         return view('dashboard-b2b', compact('recentPickups'));
     }
@@ -119,15 +123,20 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::middleware(['auth', 'driver'])->prefix('driver')->name('driver.')->group(function () {
-    Route::get('/dashboard', [DriverController::class, 'index'])->name('dashboard');
-    Route::post('/pickups/{id}/claim', [DriverController::class, 'claim'])->name('claim');
-    Route::post('/pickups/{id}/start', [DriverController::class, 'start'])->name('start');
-    Route::get('/pickups/{id}/detail', [DriverController::class, 'detail'])->name('detail');
-    Route::post('/pickups/{id}/verify', [DriverController::class, 'verify'])->name('verify');
-    Route::post('/pickups/{id}/report', [DriverController::class, 'report'])->name('report');
-    Route::get('/history', [DriverController::class, 'history'])->name('history');
+
+// ==========================================
+// RUTE KHUSUS DRIVER / KURIR
+// ==========================================
+Route::middleware(['auth'])->group(function () {
+    Route::get('/driver/dashboard', [DriverController::class, 'index'])->name('driver.dashboard');
+    Route::put('/driver/pickup/{id}/status', [DriverController::class, 'updateStatus'])->name('driver.pickup.updateStatus');
+
+    Route::get('/driver/pickup/{id}/weigh', [DriverController::class, 'weigh'])->name('driver.pickup.weigh');
+    Route::post('/driver/pickup/{id}/weigh', [DriverController::class, 'processWeigh'])->name('driver.pickup.processWeigh');
+
+    Route::get('/driver/history', [DriverController::class, 'history'])->name('driver.history');
 });
+
 
 // ==========================================
 // RUTE KHUSUS ADMINISTRATOR
